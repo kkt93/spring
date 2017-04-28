@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" 
+src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+
+</script>
+<script type="text/javascript"
+src="https://www.google.com/jsapi">
+
+</script>
+</head>
+<script type="text/javascript">
+var queryobject="";
+var queryobjectLen="";
+$.ajax({
+	type : 'post',
+	url :'get.jsp',
+	dataType : 'json',
+	success : function(data){
+		queryobject = eval('('+JSON.stringify(data)+')');
+		queryobjectLen= queryobject.emp.length;
+	},
+	error:function(xhr,type){
+		alert('error')
+	}
+	
+});
+
+
+google.load("visualization","1",{packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+
+function drawChart(){
+	var data = new google.visualization.DataTable();
+	data.addColumn('string','name');
+	data.addColumn('number','empid');
+	
+	for(var i=0; i<queryobjectLen;i++){
+	var name = queryobject.emp[i].name;
+	var empid = queryobject.emp[i].empid;
+	data.addRows([
+	              [name, parseInt(empid)]
+	              ]);
+	}	
+	var options= {title:'emp',};
+	var chart= new google.visualization.PieChart(document.getElementById('chart_div'))
+chart.draw(data,options);	
+}
+
+
+
+</script>
+<body>
+<div id="chart_div"></div>
+</body>
+</html>
